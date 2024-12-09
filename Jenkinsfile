@@ -8,28 +8,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Using SSH URL for the GitHub repository
-                git branch: 'main', url: 'git@github.com:muhammadwaqas964/Sonar.git'
+                // Using SSH URL for the GitHub repository and specifying credentials
+                git branch: 'main', url: 'git@github.com:muhammadwaqas964/Sonar.git', credentialsId: 'github-ssh-credentials'  
             }
         }
 
         stage('Verify Maven') {
             steps {
-                // Verify that Maven is correctly installed by running the `mvn -v` command
                 sh 'mvn -v'
             }
         }
 
         stage('Build') {
             steps {
-                // Clean and build the project using Maven
-                sh 'mvn clean install -DskipTests' // Skip tests to speed up the build if not needed
+                sh 'mvn clean install -DskipTests'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                // Perform SonarQube analysis with the configured token and project key
                 withSonarQubeEnv('SonarQube') {
                     sh '''
                         mvn sonar:sonar \
@@ -44,7 +41,6 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 script {
-                    // Wait for SonarQube Quality Gate to pass
                     def qg = waitForQualityGate()
                     if (qg.status != 'OK') {
                         error "Quality gate failed: ${qg.status}"
@@ -55,14 +51,12 @@ pipeline {
 
         stage('Test') {
             steps {
-                // Run tests using Maven
                 sh 'mvn test'
             }
         }
     }
 
     post {
-        // After pipeline completion, whether success or failure, clean up or notify
         always {
             echo 'Pipeline execution completed'
         }
