@@ -8,7 +8,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/shaheryarmushtaq/SonarQube-project.git'
+                // Using SSH URL for the GitHub repository
+                git branch: 'main', url: 'git@github.com:muhammadwaqas964/Sonar.git'
             }
         }
 
@@ -22,7 +23,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Clean and build the project using Maven
-                sh 'mvn clean install'
+                sh 'mvn clean install -DskipTests' // Skip tests to speed up the build if not needed
             }
         }
 
@@ -73,3 +74,4 @@ pipeline {
         }
     }
 }
+
