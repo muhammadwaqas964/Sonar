@@ -9,7 +9,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Using SSH URL for the GitHub repository
-                git branch: 'main', url: 'git@github.com:muhammadwaqas964/Sonar.git'
+                git branch: 'main', url: 'git@github.com:muhammadwaqas964/Sonar.git', credentialsId: 'github-ssh-credentials'
+    
             }
         }
 
