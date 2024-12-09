@@ -2,13 +2,12 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE_TOKEN = credentials('Sonar_Qube_Id') // Fetching the SonarQube token from Jenkins credentials store
+        SONARQUBE_TOKEN = credentials('Sonar_Qube_Id') // This should match the ID in Jenkins credentials
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Using SSH URL for the GitHub repository and specifying credentials
                 git branch: 'main', url: 'git@github.com:muhammadwaqas964/Sonar.git', credentialsId: 'github-ssh-credentials'
             }
         }
@@ -32,7 +31,7 @@ pipeline {
                         mvn sonar:sonar \
                         -Dsonar.projectKey=my-simple-app \
                         -Dsonar.host.url=http://38.45.71.12:9000 \
-                        -Dsonar.login=$SONARQUBE_TOKEN
+                        -Dsonar.login=${SONARQUBE_TOKEN}
                     '''
                 }
             }
